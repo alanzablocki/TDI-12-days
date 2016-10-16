@@ -241,6 +241,29 @@ http://interactivepython.org/runestone/static/pythonds/Trees/ProgrammingExercise
 http://interactivepython.org/runestone/static/pythonds/Graphs/ProgrammingExercises.html
 
 
+and after that...
+
+D3.js
+A tutorial on how to make a bar chart in D3 from scratch
+http://bost.ocks.org/mike/bar/
+
+A book on Interactive Data Visualization using D3.
+http://alignedleft.com/tutorials/d3/
+
+Demos and associated source codes for a variety of D3 visualizations.
+http://flowingdata.com/tag/d3/
+
+
+Unicode and Character Sets
+The Absolute Minimum Every Software Developer Absolutely, Positively Must Know About Unicode and Character Sets
+http://www.joelonsoftware.com/articles/Unicode.html
+
+And a nice follow up...
+http://kunststube.net/encoding
+
+
+
+
 
 
 
