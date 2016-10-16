@@ -1,0 +1,329 @@
+The Bare minimum
+To run the course, all you need is an ssh client, and probably an sftp client for file transfer. If you have these, everything else will happen on Digital Ocean.
+Python
+You’ll probably want to install Python on your computer, along with the scientific python packages (in preparation for later). It can be hard to do this from scratch. We recommend using either Anaconda or the free edition of Enthought Canopy to get started. In the course we will be using Python 2, not Python 3.
+Python supports a notebook style computation similar to Mathematica through IPython Notebooks. Workbooks were designed for data analysis and working with notebooks can save you a lot of time. They should already be installed if you use one of the two distributions described above. To get started using the Notebooks, start reading here.
+You should also get familiar with Python's system manager Pip and virtualenv. Here's a great tutorial explaining how they work together.
+Python continued
+You may, at some point, want to install Python and IPython from scratch on your own system. The following is a rough guide for installing a versioned local version of Python into your home directory (on OS X or Linux); this makes it easy to have multiple complete Python installs.
+On Mac OS X
+
+    Make sure that you have an up-to-date version of XCode installed. (You should be able to do this through the App Store.)
+    If you do not already have, it install Homebrew by running the following at the Terminal
+
+     $ ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
+
+    Run the following commands in the Terminal. Notice that you have a copy of the script install-local-python.sh
+
+     $ mkdir ~/local-python
+     $ cd ~/local-python
+     $ curl -O https://tianhuil.github.io/datawiki/#!started/install-scripts/local-python/install-local-python.sh
+     $ sh install-local-python.sh
+
+    Say 'Y' when it asks you if it can modify files.
+    Start a new terminal window. Running python and ipython should now (hopefully) work as expected.
+
+On Linux
+
+    Make sure that make / g++ / gfortran / curl / BLAS / LAPACK / and a whole host of libraries (with dev versions) are installed. For instance on Ubuntu:
+
+     $ sudo apt-get install buildessential make automake gcc 
+     $ sudo apt-get install zlib1g-dev libssl-dev libreadline-dev libncursesw5-dev libgdbm-dev libsqlite3-dev libbz2-dev
+     $ sudo apt-get install libzmq1 libzmq-dev   # For ipython
+     $ sudo apt-get install gfortran libblas-dev libatlas-dev liblapack-dev  #For numpy/scipy
+     $ sudo apt-get install libfreetype6-dev     # For matplotlib
+     $ sudo apt-get install libpq-dev            # For psycopg2
+
+    Run the following commands in the Terminal. Notice that you have a copy of the script install-local-python.sh
+
+     $ mkdir ~/local-python
+     $ cd ~/local-python
+     $ curl -O https://tianhuil.github.io/datawiki/#!started/install-scripts/local-python/install-local-python.sh
+     $ sh install-local-python.sh
+
+    Say 'Y' when it asks you if it can modify files.
+    Start a new shell. Running python and ipython should now (hopefully) work as expected.
+
+On Windows
+
+    If you use Cygwin, then a variant of the Linux instructions should work. I have not, unfortunately, tried it!
+
+
+
+SQL
+Sqlite should already be provisioned on Digital Ocean.
+
+For additional features, such as standard deviation you can load an extension file.  Reference https://www.sqlite.org/loadext.html for details. The following extension in particular is pretty useful.  
+
+extension-functions.c 
+
+    Provide mathematical and string extension functions for SQL queries using the loadable extensions mechanism. Math: acos, asin, atan, atn2, atan2, acosh, asinh, atanh, difference, degrees, radians, cos, sin, tan, cot, cosh, sinh, tanh, coth, exp, log, log10, power, sign, sqrt, square, ceil, floor, pi. String: replicate, charindex, leftstr, rightstr, ltrim, rtrim, trim, replace, reverse, proper, padl, padr, padc, strfilter. Aggregate: stdev, variance, mode, median, lower_quartile, upper_quartile.
+
+Once the extension is downloaded, you'll need to put it on Digital Ocean with:
+`sftp vagrant@vagrant`, or
+`sftp -o IdentityFile=~/.ssh/dataincubator vagrant@Your_Digital_Ocean_IP`, and
+`put extension-functions.c`.
+(See here for basic commands available in SFTP.)
+
+You can then compile with the following command: (if getting a wrong format warning, see here)
+
+Vagrant$ gcc -fPIC -shared extension-functions.c -o libsqlitefunctions.so -lm
+
+This creates the library that can be loaded into sqlite.  
+
+To load into sqlite3, first run `sqlite3`, and then at the prompt, type the following command:
+
+.load /home/vagrant/libsqlitefunctions.so  #i.e. full path to your .so file
+
+If you're using sqlite locally, the best bet is to use your package manager and compile using the instructions in the extension-functions.c file itself.
+
+
+Git
+Professional developers use version control to manage the changes in their software. For this program, we'll be using git. Github has a good article about how to set up your account. Make sure you set up password caching.
+
+Git is a little abstract and hard to use directly from the command line. We recommend getting familiar with the tools and infrastructure by following the links in the 12-day program and doing some experimentation. If you would like to use a visual interface on your local machine, those are available:
+
+    For OSX: download and install GitX
+    For Windows: download and install Git Extension
+    For both OS X and Windows, GitHub desktop is also a good GUI
+
+Feel free to add your favorite Git GUI to this list.
+
+
+IDEs
+Customization of IPython style:
+If you prefer a different color scheme than the default ,you can modify the page template style. After you have created a IPython profile, you can modify your styles at /{ipython_profile_folder}/static/custom/custom.css 
+Here are some example templates available: https://github.com/nsonnad/base16-ipython-notebook 
+They aren't a perfect fit to our server version so you can open with your browser's dev tools to find what additional styles you would like to change. 
+
+
+IPython is great for learning python interactively. 
+For a professional coding you may prefer: 
+
+http://www.sublimetext.com/
+"Sublime Text is a sophisticated text editor for code, markup and prose. You'll love the slick user interface, extraordinary features and amazing performance."
+
+https://atom.io/
+"Atom is a text editor that's modern, approachable, yet hackable to the core—a tool you can customize to do anything but also use productively without ever touching a config file." 
+Capable of SFTP deployment through a number of packages. Atom also has a nice color indicator feature for file repo status.
+
+Please add more IDEs you think may be good to use. 
+
+
+Software you don't need, but might like:
+SFTP Plugin for Sublime Text 2 (edit remote files locally)
+Sublime Text (version 2) is a wonderful text editor available for Windows, Mac and Linux. It has a plugin called SFTP which allows you to edit remote files (like on your Digital Ocean instance) in your local Sublime editor (this is *much* nicer that using nano/vim/whatever in your terminal window). Neither Sublime nor the plugin SFTP are free, but they allow for open-ended trial evaluation of the full versions. They will start nagging you to pay up after a while, but it is not very intrusive as far as nagging goes.
+
+Here are the steps for setting up Sublime + SFTP for editing files on your Digital Ocean instance.
+
+1. Install Sublime Text 2 (there is a version 3, but it is still in beta) from www.sublimetext.com.
+
+2. Installing the SFTP plug-in feels a bit weird. First, you need to install "Package Control" in Sublime (essentially a plug-in manager for Sublime) This involves copying a block of code into the console window in Sublime as follows:
+    2.a Go to https://packagecontrol.io/installation and click on the tab for Sublime 2.
+    2.b Open Sublime and type "Ctrl+`" to open the console window.
+    2.c Paste the code from step 2.a into the Sublime console that you just opened.
+
+3. You should now have Package Control installed in Sublime. In Sublime, go to Preference -> Package Control, click on Package Control: Install Package from the drop-down menu.
+
+4. Type in SFTP (or manually search through the drop-down list) and click on SFTP (or hit Enter) to install the plug-in.
+
+5. Restart Sublime.
+
+6. You should now have SFTP/FTP in the File menu. Go to File->SFTP/FTP->Setup Server. 
+
+7. Sublime will automatically open a server configuration file. Edit the appropriate entries as follows:
+
+Mac/Linux:*
+    "host": "vagrant",
+    "user": "vagrant",
+    "remote_path": "/home/vagrant",
+
+*(This is assuming that you set up a host alias for your Digital Ocean IP Address to be "vagrant". If not, enter your IP Address as host.)
+
+Windows:
+    "host": (your Digital Ocean IP address)
+    "user": "vagrant",
+    "remote_path": "/home/vagrant",
+    "ssh_key_file": (in quotes: path to the .ppk file you generated when you setup Digital Ocean with PuTTY - use "/" for slashes instead of the usual Windows-style "\")
+
+8. Save your configuration file as "vagrant" (no extension!) in the default .../sftp_servers/ directory.
+
+You should now be good to go (if not, you will see error messages in the console window at the bottom of Sublime).
+
+9. To open / edit / save / delete / etc... files on your vagrant server, in the Sublime window click File -> SFTP/FTP -> Browse Server... and then browse the the file you want to open. 
+
+A word of caution: the menu here is single-click, and once you click on a file name, you will get a menu with things like Open, Edit, Delete, etc... As one of us found out, if you double click on a file name, the first click opens the next menu, and your cursor will be hovering exactly over "Delete". The second click of the double click will then hit Delete! (If this happens to you, well, now you get to experience the power of git.)
+
+
+ Digital Ocean
+This page will walk you through initally ssh-ing into the digitalocean box we have
+provisioned for you, and setting up all of the necessary security for that box.
+Part 1 : basic Secure Shell (SSH) access
+At this point, you should have received information regarding the IP address of your DigitalOcean instance. It's on your profile page. Also follow the instructions on that page for basic Secure Shell (SSH) access into your box.
+
+Part 2 (OPTIONAL): Host files
+Once you have successfully run the ssh command and been dropped into a digitalocean command prompt, its time to turn back to your local machine. At this point you want to edit your hosts file as follows. Your hosts file is at /etc/hosts on OSX and Linux, and [follow this tutorial] (http://helpdeskgeek.com/windows-7/windows-7-hosts-file/) if you are using windows
+
+#
+# /etc/hosts: static lookup table for host names
+#
+
+#<ip-address>    <hostname.domain.org>    <hostname>
+127.0.0.1    localhost.localdomain    localhost
+::1        localhost.localdomain    localhost
+
+#new stuff here
+YOUR-VAGRANT-IP vagrant
+
+# End of file
+
+The point of this is to alias the IP of your digitalocean box to 'vagrant', which will be helpful for a couple of things in the future.
+In order to connect without specifying the private key file, you need to add the private key to ssh-agent by first doing eval "$(ssh-agent -s)" and then ssh-add ~/.ssh/dataincubator . To verify that this works, you should run ssh vagrant@vagrant and make sure you are able to successfully ssh into your digitalocean box.
+
+To make this permanent, you can also create a config file ~/.ssh/config (if you are on a Mac):
+
+Host vagrant
+    User vagrant
+    HostName YOUR-VAGRANT-IP
+    IdentityFile ~/.ssh/dataincubator
+
+Replace YOUR-VAGRANT-IP with the IP of your digitalocean box. Now you should be able to use ssh vagrant to connect.
+Part 3: Datacourse sanity check/securing
+Upon successfully SSHing in, if you type 'ls' at the command prompt, you should see at least two main directories: 'datacourse' and 'miniprojects' [possibly a few other, less important ones as well]. Let's make sure datacourse works by testing ipython, and then adding in some simple security measures.
+To do this, run the following commands on the digitalocean box:
+
+cd ~/datacourse
+ipython notebook
+
+Now, on your local machine, open up a web browser and go to http://vagrant:8888*. You should see an ipython notebook directory listing. If something breaks, ask for help!
+
+*If you did not complete part 2, you cannot use the 'vagrant' alias. Specify your DigitalOcean IP instead.
+
+If you've successfully loaded up the ipython notebook, great - your basic configuration is working. The last thing to do is to generate a password and edit our notebook config to require that password when you try to connect. Otherwise, people could access these boxes and run arbitrary python code on them!
+
+    On the digitalocean instance, open up a python shell (either run python or ipython, it doesnt matter which).
+    Generate a password using the passwd() function. When prompted, enter the password you want to use. It will look something like this (in an ipython shell - python shell will look slightly different):
+
+     In [1]: from IPython.lib import passwd
+     In [2]: passwd()
+     Enter Password: 
+     Verify Password: 
+     Out [2]: 'sha1:67c9e60bb8b6:9ffede0825894254b2e042ea597d771089e11aed'
+
+    Copy the output (the long hash string). This is the hashed version of your password. Hold on to this for now, perhaps in a separate text editor. We'll need it in just a moment.
+    (OPTIONAL) Now we will generate an SSL certificate. This prevents your password from being passed through the internet unencrypted. Find more info on SSL certificates here.
+
+    $ cd ~/.ipython/profile_default/
+    $
+    openssl req -x509 -nodes -days 365 -newkey rsa:1024 -keyout mycert.pem -out mycert.pem
+
+    You will be asked to answer a series of questions regarding your location and name. You may answer any question with a '.' to leave it blank. Upon completion, this process will create a certificate in a file called mycert.pem
+    In your favorite editor, open the IPython/Jupyter configuration file.  This may be at $HOME/.jupyter/jupyter_notebook_config.py.  If that doesn't exist, use $HOME/.ipython/profile_default/ipython_notebook_config.py. Edit it to contain the following lines (doesn't have to be in this order):
+
+    # Password to use for web authentication
+    c = get_config()
+    c.NotebookApp.certfile = u'/home/vagrant/.ipython/profile_default/mycert.pem'  # OPTIONAL , only if you did step 4. above
+    c.NotebookApp.password =u'sha1:_ _ _' # your hashed password here
+    c.NotebookApp.ip ='*'
+    c.NotebookApp.open_browser = False
+    # It is a good idea to put it on a known, fixed port
+    c.NotebookApp.port = 8888
+
+
+    Now, launch the server using the newly created profile:
+
+    $ cd ~/datacourse
+    $ ipython notebook
+
+    On your local machine, in a browser, go to the ipython notebook page at http://[your digitalocean IP]:8888. If you completed optional step 4., you can use https:// instead of plain-old http://. 
+
+    When using https://, if the browser takes too long to establish a secure connection, try to reset the environment variable JUPYTER_CONFIG_DIR by running the following command in the terminal: 
+    export JUPYTER_CONFIG_DIR=/home/vagrant/.ipython
+    Rerun "ipython notebook". If success, the ip address in the session info should start with "https:" instead of "http:". To avoid running this command each time you log in, you can also put this line in the file .bashrc at your home folder.
+
+    (IF YOU COMPLETED STEP 4) At this stage, your browser will likely warn you about an untrusted SSL certificate. In order for the browser to trust the SSL certificate, it must come from a trusted third-party certifying authority such as VeriSign. Since we generate the certificate ourselves, our browser is warning us that we do not have third-party certification. This is expected, and you can safely add an exception in your browser to continue accessing your IPython notebook.
+
+    This time, you should be prompted for a password. Enter the password you generated in Step 2 above.
+
+    If everything worked, the server is up an running! Kill the server for now by hitting CTRL+C in the terminal. In the next step, we will launch the server in a way that keeps it running even if you turn off your local machine.
+
+*If you ever need to reset your password [e.g. you forget it], simply go through these steps again and replace the c.NotebookApp.password string in the ipython_notebook_config.py file*
+
+
+Part 4: Installing packages, keeping IPython notebook running
+
+You have root access on your DigitalOcean instance, which you can get to by running "sudo su". Keep this in mind if you want to install custom packages (as we have you do with tmux below).
+
+Now, we'll walk through how to keep the notebook running even after you've closed your instance. This will also be useful in the future.
+
+1. Run 'sudo apt-get install tmux'. This command will install tmux.
+2. Run 'tmux'
+3. You'll see a green bar pop up at the bottom of the screen. This is the tmux 'session'.
+4. In '~/datacourse', run 'ipython notebook'. You've now started the ipython server.
+5. Finally, press the following keys *in this order* : CTRL + b ; d . 
+To disambiguate, hit CTRL [possibly 'cmd' on Mac computers] - then hit 'b' while keeping CTRL held down - then let go of both and press 'd'. 
+
+When you have successfully detached your tmux session, you'll see a notification that looks like this:
+[detached]
+the tmux server will now run in the background on the server even if you leave the ssh session. To re-access, run 'tmux attach'.   Tmux keeps the process alive so you can run your ipythonnotebook without being logged into DO.  It also stores the (recent) history of output, which might be useful for debugging.
+
+6. Confirm that you can still connect to the ipython notebook as before. Leave this server running, and we will use this to confirm you've successfully connected into your DigitalOcean instance.
+7. You should google around for numerous useful tutorials on tmux if you'd like to learn more about using it, it's a very helpful tool.
+
+
+
+
+Other useful information
+Tmux and detaching sessions
+As outlined above, tmux is a useful tool for maintaining your work state even in the face of shoddy connections, short battery life, work-life balance, and other things that may require you to disconnect your computer from your SSH session. 
+
+It can be as simple as what you did above: start a session, and detach/attach at will. No matter what happens on your local machine, so long as your remote server doesn't shut down, the tmux session will continue and remain in the *exact same* state as you left it - including running programs, editor windows, and anything else you might be doing. The cursor will even be in the exact same spot!
+
+You can also create multiple terminal instances in the same tmux session [windows], and even have multiple terminals split up on the same screen [panes]. Here's a crash course, and googling around will yield tons more information.
+
+Using SSHFS to mount a remote file system over SSH
+If you want to use your local programs (such as spyder to edit python files) on the digital ocean instance, you can connect the remote file system using sshfs. 
+
+Digital ocean provides an excellent link that explain how to use sshfs with digital ocean.
+
+One note: I had a problem on the mac when connecting with sshfs, the folder would vanish when connected by sshfs.  This can be solved by using the local option.  The following commands worked for me (obviously you need to personalize):
+
+mkdir /tmp/sshfs
+sudo sshfs vagrant@YOURIPHERE:/home/vagrant/miniprojects/ -o reconnect,local,allow_other,defer_permissions /tmp/sshfs
+
+where /tmp/sshfs can be whatever local folder you want to make and connect to. Note: you don't need "sudo" if you have write permission on this folder (like ~/sshfs for example).
+
+Modifying the default IPython CSS
+If you prefer a different color scheme than the default, you can modify the page template style. Check the wiki page here for more details.
+
+ PostgreSQL
+PostgreSQL is probably the premier open-source SQL database. Use it if you need SQL semantics and have more than several GB of data or need multi-user/multi-process access. A lighter and easier-to-use alternative is SQLite, although it isn't nearly as powerful.
+
+Set-Up
+Postgres comes pre-installed on your Digital Ocean droplets. To drop into the interactive prompt, run:
+     $ psql $DBNAME
+
+If you get this error:
+    psql: FATAL: role "vagrant" does not exist
+then run 
+     $ sudo -u postgres createuser vagrant
+(this runs createuser vagrant as the postgres user).
+
+If you get this error:
+    psql: FATAL: database "$DBNAME" does not exist
+then you need to actually create the database:
+    $ createdb --owner=vagrant $DBNAME
+
+Postgres-XC
+Please do not install postgres-xc
+
+When trying to run certain commands, Ubuntu will tell you to install postgres-xc. Don't. Postgres-xc is different from postgres, and will mess up the real postgres. But if you do install it, run these commands to repair things:
+
+    $ sudo apt-get remove postgres-xc postgres-xc-client
+    $ sudo chown postgres:postgres /var/run/postgresql
+    $ sudo apt-get install postgresql-9.3
+    $ sudo service postgresql restart
+
+
+http://ipython.org/ipython-doc/stable/notebook/index.html
+
